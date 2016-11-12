@@ -161,7 +161,11 @@ class pop3lib:
 		body = ""
 		if b.is_multipart():
 			for payload in b.get_payload():
-				body = body + payload.get_payload()
+				d = payload.get_payload()
+				if type(d) is list:
+					body = body + ','.join(str(v) for v in d)
+				else:
+					body = body + str(payload.get_payload())
 		else:
 			body = b.get_payload()
 		body = body.replace("\r","")
@@ -175,3 +179,5 @@ if __name__ == "__main__":
 	reload(sys)
 	sys.setdefaultencoding('utf8')
 	pop_obj = pop3lib(HOST_ADDR,POP3_PORT,USERNAME,PASSWORD)
+	pop_obj.get_message_count()
+	pop_obj.get_email_body(1)
